@@ -66,7 +66,7 @@ ROBOTSTXT_OBEY = True
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # 'scrapy.pipelines.images.ImagesPipeline': 2,
-    'mangaeden.pipelines.MyImagesPipeline': 1,
+    'mangascraper.pipelines.MyImagesPipeline': 1,
 }
 
 IMAGES_STORE = 'images/immortale/'

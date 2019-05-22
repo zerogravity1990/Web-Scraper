@@ -6,10 +6,13 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class MangascraperPipeline(object):
-    def process_item(self, item, spider):
-        return item
+# class MangascraperPipeline(object):
+#     def process_item(self, item, spider):
+#         return item
 
+import scrapy
+from scrapy.pipelines.images import ImagesPipeline
+from scrapy.exceptions import DropItem
 
 class MyImagesPipeline(ImagesPipeline):
 #     def get_media_requests(self, item, info):
@@ -18,8 +21,23 @@ class MyImagesPipeline(ImagesPipeline):
 #             meta = {'item':item}
 #             yield scrapy.Request(url=img_url, meta=meta)
 
+    # def file_path(self, request, response=None, info=None):
+    #     return scrapy.Request.meta.get('filename','')
+    #
+    # def get_media_requests(self, item, info):
+    #     return [scrapy.Request(url, meta={'filename':item.get('image_name')}) for url in item.get(self.images_urls_field, [])]
+
     def file_path(self, request, response=None, info=None):
         return scrapy.Request.meta.get('filename','')
 
     def get_media_requests(self, item, info):
-        return [scrapy.Request(url, meta={'filename':item.get('image_name')}) for url in item.get(self.images_urls_field, [])]
+        img_url = item['image_urls'][0]
+        meta = {'filename': item['image_names']}
+        yield scrapy.Request(url=img_url, meta=meta)
+
+    def item_completed(self, results, item, info):
+        image_paths = [x['path'] for ok, x in results if ok]
+        if not image_paths:
+            raise DropItem("Item contains no images")
+        item['images'] = image_paths
+        return item

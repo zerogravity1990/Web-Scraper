@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from .. import MangascraperItem
+from .. import items
 
 class ImmortaleSpider(scrapy.Spider):
     name = 'immortale'
     allowed_domains = ['www.mangaeden.com']
-    start_urls = ['http://https://www.mangaeden.com/en/it-manga/limmortale/0/1/']
+    start_urls = ['https://www.mangaeden.com/en/it-manga/limmortale/0/1/']
 
 
     def parse(self, response):
-        item = MangascraperItem()
+        item = items.MangascraperItem()
         urls_list = []
         for url in response.xpath('//img[@id="mainImg"]/@src').extract():
             urls_list.append("https:" + url)
         item['image_urls'] = urls_list
-        item['image_name'] = response.url.split("/")[-3] + "-" + response.url.split("/")[-2]
+        item['image_names'] = response.url.split("/")[-3] + "-" + response.url.split("/")[-2]
         yield item
 
         next_page = response.xpath('//a[@class="ui-state-default next"]/@href').extract()
