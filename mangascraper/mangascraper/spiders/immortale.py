@@ -11,10 +11,13 @@ class ImmortaleSpider(scrapy.Spider):
     def parse(self, response):
         item = items.MangascraperItem()
         urls_list = []
+        name_list = []
         for url in response.xpath('//img[@id="mainImg"]/@src').extract():
             urls_list.append("https:" + url)
         item['image_urls'] = urls_list
-        item['image_names'] = response.url.split("/")[-3] + "-" + response.url.split("/")[-2]
+        name_list.append(response.url.split("/")[-3] + "-" + response.url.split("/")[-2])
+        item['image_names'] = name_list
+        # item['image_names'] = response.url.split("/")[-3] + "-" + response.url.split("/")[-2]   #result is like "chapter-page", "1-25"
         yield item
 
         next_page = response.xpath('//a[@class="ui-state-default next"]/@href').extract()
