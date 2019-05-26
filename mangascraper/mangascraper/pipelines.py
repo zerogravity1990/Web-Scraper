@@ -19,4 +19,4 @@ class MyImagesPipeline(ImagesPipeline):
         os.rename(self.IMAGES_STORE + "/" + image_path[0], self.IMAGES_STORE + "/full/" + item["image_names"][0] + ".jpg")
         return item
 
-# TODO: try to use get_path instead of os.rename
+# TODO: try to override file_path instead of os.rename
